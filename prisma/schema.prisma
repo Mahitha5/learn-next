@@ -1,0 +1,26 @@
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:pwd@localhost:55000/dbname"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  Blog  Blog[]
+}
+
+model Blog {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+  title     String   @db.VarChar(255)
+  content   String   @db.LongText
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
