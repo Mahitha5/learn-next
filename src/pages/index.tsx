@@ -10,8 +10,8 @@ export default function Home() {
                 <title>Blogs</title>
             </Head>
             <main>
-                <button type="button" onClick={() => router.push('/blogs/new')}>
-                    New
+                <button type="button" onClick={() => router.push('/user/new')}>
+                    Add User
                 </button>
             </main>
         </>
