@@ -1,16 +1,13 @@
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:pwd@localhost:55000/dbname"
-}
-
-generator client {
-  provider = "prisma-client-js"
+  url      = "mysql://root:mysqlpw@localhost:55000/next-learn"
 }
 
 model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
-  name  String?
+  firstName  String?
+  lastName  String?
   Blog  Blog[]
 }
 
