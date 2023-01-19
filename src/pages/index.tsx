@@ -3,8 +3,22 @@ import { useRouter } from 'next/router';
 import { PrismaClient } from "@prisma/client";
 import { InferGetServerSidePropsType } from "next";
 
+type User = {
+    id: number
+    email: string,
+    firstName: string | null,
+    lastName: string | null
+}
+
 function Home({users}: InferGetServerSidePropsType<typeof getServerSideProps>) {
     const router = useRouter()
+
+    const handleClick = (user: User) => {
+        router.push({
+            pathname: `/user/update/${user.id}`,
+            query: { user: JSON.stringify(user) },
+        })
+    }
 
     return (
         <>
@@ -33,6 +47,13 @@ function Home({users}: InferGetServerSidePropsType<typeof getServerSideProps>) {
                                     <span>Last Name:</span>
                                     <span>{user.lastName}</span>
                                 </div>
+
+                                <button
+                                    type="button"
+                                    onClick={ () => handleClick(user)}
+                                >
+                                    Edit
+                                </button>
                             </div>
                         ))
                     }
