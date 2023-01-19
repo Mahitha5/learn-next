@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router';
-import { PrismaClient } from "@prisma/client";
-import { InferGetServerSidePropsType } from "next";
+import { trpc } from "../utils/trpc"
 
 type User = {
     id: number
@@ -10,8 +9,9 @@ type User = {
     lastName: string | null
 }
 
-function Home({users}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+function Home() {
     const router = useRouter()
+    const {isLoading, isError, data, error} = trpc.user.all.useQuery();
 
     const handleClick = (user: User) => {
         router.push({
@@ -20,54 +20,84 @@ function Home({users}: InferGetServerSidePropsType<typeof getServerSideProps>) {
         })
     }
 
-    return (
-        <>
-            <Head>
-                <title>Blogs</title>
-            </Head>
-            <main>
-                <>
-                    <button type="button" onClick={() => router.push('/user/new')}>
-                        Add User
-                    </button>
+    if (isError) {
+        return <span>Error: {error.message}</span>
+    }
 
-                    <div> All users</div>
-                    {
-                        users.map(user => (
-                            <div key={user.id}>
-                                <div>
-                                    <span>Email:</span>
-                                    <span>{user.email}</span>
-                                </div>
-                                <div>
-                                    <span>First Name:</span>
-                                    <span>{user.firstName}</span>
-                                </div>
-                                <div>
-                                    <span>Last Name:</span>
-                                    <span>{user.lastName}</span>
-                                </div>
+    if(data) {
+        const users = data ? data.users : []
 
-                                <button
-                                    type="button"
-                                    onClick={ () => handleClick(user)}
-                                >
-                                    Edit
-                                </button>
-                            </div>
-                        ))
-                    }
-                </>
-            </main>
-        </>
-    )
+        return (
+            <>
+                <Head>
+                    <title>Blogs</title>
+                </Head>
+                <main>
+                    <>
+                        <button type="button" onClick={() => router.push('/user/new')}>
+                            Add User
+                        </button>
+
+                        <div> All users</div>
+                        {
+                            users.map(user => (
+                                <div key={user.id}>
+                                    <div>
+                                        <span>Email:</span>
+                                        <span>{user.email}</span>
+                                    </div>
+                                    <div>
+                                        <span>First Name:</span>
+                                        <span>{user.firstName}</span>
+                                    </div>
+                                    <div>
+                                        <span>Last Name:</span>
+                                        <span>{user.lastName}</span>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => handleClick(user)}
+                                    >
+                                        Edit
+                                    </button>
+                                </div>
+                            ))
+                        }
+                    </>
+                </main>
+            </>
+        )
+    }
+    return <span>Loading...</span>
 }
 
-export async function getServerSideProps() {
-    const prisma = new PrismaClient()
-    const users = await prisma.user.findMany()
-
-    return {props: {users}}
-}
+// export async function getServerSideProps() {
+//     // const prisma = new PrismaClient()
+//     // const users = await prisma.user.findMany()
+//     //
+//     // return {props: {users}}
+//
+//     // console.log("first comig here")
+//     // // const postQuery = trpc.user.all.useQuery();
+//     // console.log("feched data")
+//     //
+//     // if (postQuery.error) {
+//     //     // return (
+//     //     //     <NextError
+//     //     //         title={postQuery.error.message}
+//     //     //         statusCode={postQuery.error.data?.httpStatus ?? 500}
+//     //     //     />
+//     //     // );
+//     // }
+//     //
+//     // if (postQuery.status !== 'success') {
+//     //     return <>Loading...</>;
+//     // }
+//     // const { data } = postQuery;
+//     // console.log("ha ha")
+//     // console.log(data)
+//     // return { props: data }
+// }
 
 export default Home
