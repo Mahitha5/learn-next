@@ -1,3 +1,5 @@
+//These endpoints are not used since tRPC installed
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
 
