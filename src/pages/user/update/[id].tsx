@@ -1,9 +1,11 @@
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
+import {trpc} from "../../../utils/trpc"
 
 export default function UpdateUser() {
     const router = useRouter()
     const { user } = router.query
+    const updateMutation = trpc.user.update.useMutation()
 
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -20,21 +22,23 @@ export default function UpdateUser() {
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-        const res = await fetch('/api/user', {
-            method: "PUT",
-            body: JSON.stringify({
-                email: email,
-                firstName: firstName,
-                lastName: lastName
-            })
+        updateMutation.mutate({
+            email: email,
+            firstName: firstName,
+            lastName: lastName
         })
+    }
 
-        const data = await res.json()
+    if (updateMutation.isLoading) {
+        return <div>Im still loading</div>
+    }
 
-        if (res.status !== 200) {
-            throw new Error(data.message)
-        }
+    if (updateMutation.isSuccess) {
         router.push('/')
+    }
+
+    if (updateMutation.isError) {
+        return <div>Something went wrong</div>
     }
 
     return (

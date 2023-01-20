@@ -30,5 +30,26 @@ export const userRouter = router({
             return {
                 message: 'Successfully added'
             }
+        }),
+    update: procedure
+        .input(z.object({
+            email: z.string(),
+            firstName: z.string(),
+            lastName: z.string()
+        }))
+        .mutation(async ({ input }) => {
+            await prisma.user.update({
+                where: {
+                    email: input.email
+                },
+                data: {
+                    firstName: input.firstName,
+                    lastName: input.lastName
+                }
+            })
+
+            return {
+                message: "Updated successfully"
+            }
         })
 })
