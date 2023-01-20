@@ -1,16 +1,34 @@
-import { router, procedure } from '../trpc'
+import {router, procedure} from '../trpc'
 import {PrismaClient} from '@prisma/client';
-import { z } from 'zod';
+import {z} from 'zod';
 
 const prisma = new PrismaClient()
 
-console.log("in user router")
 export const userRouter = router({
     all: procedure.query(async () => {
-            const users = await prisma.user.findMany()
+        const users = await prisma.user.findMany()
 
+        return {
+            users
+        }
+    }),
+    add: procedure
+        .input(z.object({
+            email: z.string(),
+            firstName: z.string(),
+            lastName: z.string()
+        }))
+        .mutation(async ({input}) => {
+            console.log("im in mutation")
+            await prisma.user.create({
+                data: {
+                    email: input.email,
+                    firstName: input.firstName,
+                    lastName: input.lastName
+                }
+            })
             return {
-                users
+                message: 'Successfully added'
             }
         })
 })
