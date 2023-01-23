@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "run-with-migrations": "npx prisma migrate dev && npx prisma generate && next build && next start"
   },
   "dependencies": {
     "@next/font": "13.1.2",

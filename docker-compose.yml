@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+    networks:
+      - app_network
+
+  next-app:
+    links:
+      - db
+    depends_on:
+      - db
+    container_name: next-app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./prisma:/app/prisma
+    restart: always
+    environment:
+      DB_URL: ${DB_URL}
+    ports:
+      - '3000:3000'
+    networks:
+      - app_network
+
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+volumes:
+  my-db:
+networks:
+  app_network:
