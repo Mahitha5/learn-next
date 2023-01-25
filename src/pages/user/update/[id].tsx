@@ -4,7 +4,7 @@ import {trpc} from "../../../utils/trpc"
 
 export default function UpdateUser() {
     const router = useRouter()
-    const { user } = router.query
+    const {user} = router.query
     const updateMutation = trpc.user.update.useMutation()
 
     const [firstName, setFirstName] = useState("")
@@ -42,14 +42,22 @@ export default function UpdateUser() {
     }
 
     return (
-        <form onSubmit={(event) => handleSubmit(event)}>
-            <label htmlFor="firstname">First Name</label>
-            <input type="text" id="firstname" name="firstname" value={firstName} required onChange={(e) => setFirstName(e.target.value)}/>
+        <div className={"flex flex-col place-items-center m-20"}>
+            <form onSubmit={(event) => handleSubmit(event)} className={"bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-50"}>
+                <label htmlFor="firstname" className={"block text-gray-700 text-sm font-bold mb-2"}>First Name</label>
+                <input type="text" id="firstname" name="firstname" value={firstName} required
+                       onChange={(e) => setFirstName(e.target.value)} className={"shadow appearance-none border rounded py-2 px-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"}/>
 
-            <label htmlFor="lastname">Last Name</label>
-            <input type="text" id="lastname" name="lastname" value={lastName} required onChange={(e) => setLastName(e.target.value)}/>
+                <label htmlFor="lastname" className={"block text-gray-700 text-sm font-bold mb-2"}>Last Name</label>
+                <input type="text" id="lastname" name="lastname" value={lastName} required
+                       onChange={(e) => setLastName(e.target.value)} className={"shadow appearance-none border rounded py-2 px-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"}/>
 
-            <button type="submit">Submit</button>
-        </form>
+                <div className={"text-center"}>
+                    <button type="submit"
+                            className={"bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-5"}>Submit
+                    </button>
+                </div>
+            </form>
+        </div>
     )
 }

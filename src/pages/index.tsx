@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router';
-import { trpc } from "../utils/trpc"
+import {useRouter} from 'next/router';
+import {trpc} from "../utils/trpc"
 
 type User = {
     id: number
@@ -16,7 +16,7 @@ function Home() {
     const handleClick = (user: User) => {
         router.push({
             pathname: `/user/update/${user.id}`,
-            query: { user: JSON.stringify(user) },
+            query: {user: JSON.stringify(user)},
         })
     }
 
@@ -24,7 +24,7 @@ function Home() {
         return <span>Error: {error.message}</span>
     }
 
-    if(data) {
+    if (data) {
         const users = data ? data.users : []
 
         return (
@@ -33,38 +33,45 @@ function Home() {
                     <title>Blogs</title>
                 </Head>
                 <main>
-                    <>
-                        <button type="button" onClick={() => router.push('/user/new')}>
-                            Add User
-                        </button>
-
-                        <div> All users</div>
-                        {
-                            users.map(user => (
-                                <div key={user.id}>
-                                    <div>
-                                        <span>Email:</span>
-                                        <span>{user.email}</span>
-                                    </div>
-                                    <div>
-                                        <span>First Name:</span>
-                                        <span>{user.firstName}</span>
-                                    </div>
-                                    <div>
-                                        <span>Last Name:</span>
-                                        <span>{user.lastName}</span>
-                                    </div>
-
-                                    <button
-                                        type="button"
-                                        onClick={() => handleClick(user)}
-                                    >
-                                        Edit
-                                    </button>
-                                </div>
-                            ))
-                        }
-                    </>
+                    <div className={"grid grid-rows-2 place-content-center"}>
+                        <div className={"grid grid-cols-2 place-content-center"}>
+                            <span className={"text-3xl font-bold"}> All users</span>
+                            <span className={"text-right"}>
+                                <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                                        type="button" onClick={() => router.push('/user/new')}>
+                                    Add User
+                                </button>
+                            </span>
+                        </div>
+                        <table className={"border-collapse border border-slate-300 min-w-full items-center"}>
+                            <thead>
+                                <tr>
+                                    <th className={"border border-slate-300 px-6 py-4 border-r"}>Email</th>
+                                    <th className={"border border-slate-300 px-6 py-4 border-r"}>Name</th>
+                                    <th className={"w-100"}></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                users.map(user => (
+                                    <tr key={user.id}>
+                                        <td className={"border border-slate-300 px-6 py-4 border-r"}>{user.email}</td>
+                                        <td className={"border border-slate-300 px-6 py-4 border-r"}>{user.firstName + ' ' + user.lastName}</td>
+                                        <td className={"border border-slate-300 px-6 py-4 border-r"}>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleClick(user)}
+                                                className={"bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"}
+                                            >
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                            </tbody>
+                        </table>
+                    </div>
                 </main>
             </>
         )
