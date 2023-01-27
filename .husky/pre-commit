@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npm run lint || (
+  echo 'Lint has some issues. Run fix command'
+)
+
+npm run check-format || (
+  echo 'There are format issues. Run fix command'
+)
