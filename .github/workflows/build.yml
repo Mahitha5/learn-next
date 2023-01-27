@@ -2,7 +2,7 @@ name: Build Next
 run-name: Building Next App
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 jobs:
   build-next:
     runs-on: ubuntu-latest

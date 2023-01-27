@@ -38,7 +38,6 @@ services:
     networks:
       - app_network
 
-
 # Define a network, which allows containers to communicate
 # with each other, by using their container name as a hostname
 volumes:
